@@ -110,4 +110,4 @@ class CategoryController {
     }
 }
 
-export default CategoryController
+export default new CategoryController()

@@ -17,7 +17,7 @@ const adminSchema = new moongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['admin', 'owner'],
+        required: false,
         default: 'admin'
     },
     username: {
@@ -34,7 +34,7 @@ const adminSchema = new moongoose.Schema({
         required: false
     },
     isActive: {
-        type: boolean,
+        type: Boolean,
         required: false,
         default: true
     }
@@ -47,11 +47,11 @@ export const validateAdmin = (data) => {
         fname: Joi.string().required(),
         lname: Joi.string().allow(""),
         phone: Joi.string().required(),
-        role: Joi.string().valid("user", "admin", "owner").allow("user"),
+        role: Joi.string().allow("admin"),
         username: Joi.string().allow(""),
         password: Joi.string().required(),
         hashPassword: Joi.string(),
         isActive: Joi.boolean().allow(true)
     })
-    return schema.validateAdmin(data)
+    return schema.validate(data)
 }
