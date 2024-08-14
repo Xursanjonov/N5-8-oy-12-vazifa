@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { Admin, validateAdmin } from "../models/adminSchema.js";
-const ADMIN_SECRET = "Nusratillo_admin";
+const ADMIN_SECRET = process.env.ADMIN_SECRET;
 
 class AdminController {
     // get Admins
@@ -113,32 +113,32 @@ class AdminController {
     }
     // sign up
     async signUp(req, res) {
-        // try {
-        const { error } = validateAdmin(req.body);
-        console.log(req.user)
-        if (error || !req.body) {
-            return res.status(400).json({
+        try {
+            const { error } = validateAdmin(req.body);
+            // console.log(req.user)
+            if (error || !req.body) {
+                return res.status(400).json({
+                    variant: "error",
+                    msg: "Malumot topilmadi",
+                    payload: null
+                })
+            }
+            const salt = await bcrypt.genSalt(10);
+            const hashPassword = await bcrypt.hash(req.body.password, salt);
+            const token = jwt.sign({ _id: req.body._id, isActive: req.body.isActive }, ADMIN_SECRET, { expiresIn: "1d" });
+            const admin = new Admin.create({ ...req.body, hashPassword });
+            res.status(201).json({
+                variant: "success",
+                msg: "Admin is successfully",
+                payload: { admin, token }
+            })
+        } catch {
+            res.status(500).json({
+                msg: "Server Error",
                 variant: "error",
-                msg: "Malumot topilmadi",
                 payload: null
             })
         }
-        const salt = await bcrypt.genSalt(10);
-        const hashPassword = await bcrypt.hash(req.body.password, salt);
-        const token = jwt.sign({ _id: req.body._id, isActive: req.body.isActive }, ADMIN_SECRET, { expiresIn: "1d" });
-        const admin = new Admin.create({ ...req.body, hashPassword });
-        res.status(201).json({
-            variant: "success",
-            msg: "Admin is successfully",
-            payload: { admin, token }
-        })
-        // } catch {
-        //     res.status(500).json({
-        //         msg: "Server Error",
-        //         variant: "error",
-        //         payload: null
-        //     })
-        // }
     }
     // sign in
     async signIn(req, res) {

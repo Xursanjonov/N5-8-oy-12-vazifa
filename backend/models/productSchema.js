@@ -31,10 +31,14 @@ const productSchema = new moongoose.Schema({
         default: 0
     },
     categoryId: {
-        type: 'objectId',
+        type: String,
+        required: false,
+        default: "categoryId-1"
     },
     adminId: {
-        type: 'objectId',
+        type: String,
+        required: false,
+        default: "adminId-1"
     },
     units: {
         type: String,
@@ -59,7 +63,7 @@ const productSchema = new moongoose.Schema({
     }
 }, { timestamps: true })
 
-export const Product = moongoose.model('exam-product', productSchema)
+export const Products = moongoose.model('exam-product', productSchema)
 
 export const validateProduct = (data) => {
     const schema = Joi.object({
@@ -77,5 +81,5 @@ export const validateProduct = (data) => {
         info: Joi.array(),
         available: Joi.boolean()
     })
-    return schema.validateProduct(data)
+    return schema.validate(data)
 }

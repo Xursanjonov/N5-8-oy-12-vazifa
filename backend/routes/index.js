@@ -1,6 +1,7 @@
 import express from 'express'
 import AdminController from '../controller/admin.js'
 import CategoryController from "../controller/category.js"
+import ProductsController from "../controller/products.js"
 import { auth } from '../middleware/auth.js'
 const router = express.Router()
 
@@ -21,5 +22,13 @@ router.post('/create/category', CategoryController.createCategory)
 router.put('/update/category/:id', CategoryController.updateCategory)
 router.delete('/delete/category/:id', CategoryController.deleteCategory)
 // Category end
+
+// Products
+router.get('/get/products', ProductsController.getProducts)
+router.get('/get/products/:id', ProductsController.getProductId)
+router.post('/create/products', ProductsController.createProducts)
+router.put('/update/products/:id', ProductsController.updateProducts)
+router.delete('/delete/products/:id', ProductsController.deleteProducts)
+// Products end
 
 export default router
